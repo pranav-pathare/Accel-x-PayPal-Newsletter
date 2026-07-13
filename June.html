@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -174,6 +173,9 @@ body {
 .team-name { font-size:13px; font-weight:600; color:var(--ink); }
 .num-cell  { text-align:right; font-size:14px; font-weight:600; color:var(--navy); font-variant-numeric:tabular-nums; }
 .num-cell.na { font-size:11px; color:#CBD5E1; font-weight:400; }
+.delta-cell { text-align:right; }
+.delta-num { font-size:13px; font-weight:700; color:#059669; font-variant-numeric:tabular-nums; }
+.delta-sub  { font-size:10px; color:var(--muted); margin-top:1px; }
 .bar-cell  { width:140px; padding:13px 18px 13px 0; }
 .bar-track { height:6px; background:#E2E8F0; border-radius:3px; overflow:hidden; }
 .bar-fill  { height:100%; border-radius:3px; animation:slideR .9s cubic-bezier(.4,0,.2,1) both; }
@@ -330,8 +332,9 @@ body {
   .vol-table tbody td { padding: 4px 18px; text-align: left; }
   .vol-table .bar-cell { width: 100%; padding: 8px 18px 4px; }
   .vol-table .num-cell::before,
+  .vol-table .delta-cell::before,
   .vol-table .vol-foot-num::before { content: attr(data-label); float: left; font-size: 11px; font-weight: 600; color: var(--muted); }
-  .vol-table .num-cell { text-align: right; }
+  .vol-table .num-cell, .vol-table .delta-cell { text-align: right; }
 
   /* Grand Total footer row */
   .vol-foot td { padding: 4px 18px !important; border-top: none !important; }
@@ -357,8 +360,8 @@ body {
     transition: none !important;
   }
 
-  /* One tall page sized to the full content — no page breaks */
-  @page { size: 210mm 540mm; margin: 0; }
+  /* No custom @page rule — letting the browser's own default paged-media
+     handling apply is what reliably keeps this to a single page. */
 
   html, body {
     background: #ffffff !important;
@@ -378,27 +381,34 @@ body {
   .bar-fill, .c-fill { width: var(--tw) !important; }
 
   /* Tighten vertical spacing so everything fits one page with margin to spare */
-  .masthead { padding: 26px 44px 24px !important; }
-  .masthead-headline { margin-bottom: 8px !important; }
-  .pills { margin-top: 13px !important; }
-  .banner { margin-top: 16px !important; padding: 12px 18px !important; }
-  .body { gap: 16px !important; padding: 22px 32px 22px !important; }
-  .sec-label { margin-bottom: 11px !important; }
-  .intro-card { padding: 15px 24px !important; }
-  .vol-totals { padding: 14px 26px !important; }
-  .vol-table tbody td { padding: 10px 18px !important; }
-  .hl-grid { gap: 10px !important; }
-  .hl-head { padding: 13px 20px 9px !important; }
-  .hl-body { padding-top: 10px !important; padding-bottom: 13px !important; }
-  .footer { padding: 15px 36px !important; }
+  .masthead { padding: 18px 40px 16px !important; }
+  .masthead-headline { font-size: 30px !important; margin-bottom: 6px !important; }
+  .pills { display: none !important; }
+  .banner { margin-top: 10px !important; padding: 10px 16px !important; }
+  .banner-body { font-size: 11.5px !important; line-height: 1.5 !important; }
+  .body { gap: 8px !important; padding: 12px 28px 8px !important; }
+  .sec-label { margin-bottom: 6px !important; }
+  .intro-card { padding: 8px 20px !important; }
+  .intro-card p { font-size: 11.5px !important; line-height: 1.4 !important; }
+  .intro-card p + p { margin-top: 4px !important; }
+  .vol-totals { padding: 8px 22px !important; }
+  .tot-num { font-size: 20px !important; }
+  .vol-table tbody td { padding: 5px 16px !important; }
+  .hl-grid { gap: 6px !important; }
+  .hl-head { padding: 6px 16px 4px !important; }
+  .hl-metric { font-size: 24px !important; }
+  .hl-body { padding: 0 16px 6px !important; padding-top: 4px !important; }
+  .hl-desc { font-size: 10px !important; line-height: 1.35 !important; }
+  .footer { padding: 8px 32px !important; }
 
   /* Gradient-clipped numbers can print blank — fall back to solid */
   .tot-num { -webkit-text-fill-color: #ffffff !important; background: none !important; color: #ffffff !important; }
   .tot-num.gold { -webkit-text-fill-color: #FFD700 !important; color: #FFD700 !important; }
 
-  /* Never split anything across pages */
-  .newsletter, .masthead, .banner, .intro-card, .vol-card, .footer,
-  .hl-card, .hl-grid, .body, .vol-table tr {
+  /* Avoid splitting individual cards/rows mid-way, but let the large
+     wrapper containers (.newsletter, .body) break normally across pages */
+  .masthead, .banner, .intro-card, .vol-card, .footer,
+  .hl-card, .vol-table tr {
     break-inside: avoid !important;
     page-break-inside: avoid !important;
   }
@@ -462,27 +472,32 @@ body {
         <thead><tr>
           <th>Team / Function</th>
           <th style="text-align:right">Total Requests</th>
+          <th style="text-align:right">vs. May</th>
           <th style="width:140px;padding-left:0">Volume %</th>
         </tr></thead>
         <tbody>
           <tr>
             <td><div class="team-cell"><div class="team-dot" style="background:#003087"></div><div class="team-name">Deals</div></div></td>
             <td class="num-cell" data-label="Total Requests">13,916</td>
+            <td class="delta-cell" data-label="vs. May"><div class="delta-num">+256</div><div class="delta-sub">+1.87%</div></td>
             <td class="bar-cell"><div class="bar-pct">63.63%</div><div class="bar-track"><div class="bar-fill" style="--tw:63.63%;width:63.63%;background:linear-gradient(90deg,#003087,#009CDE)"></div></div></td>
           </tr>
           <tr>
             <td><div class="team-cell"><div class="team-dot" style="background:#00897B"></div><div class="team-name">Merchant Ops &amp; Account Management (MOAM)</div></div></td>
             <td class="num-cell" data-label="Total Requests">3,146</td>
+            <td class="delta-cell" data-label="vs. May"><div class="delta-num">+1,846</div><div class="delta-sub">+142.00%</div></td>
             <td class="bar-cell"><div class="bar-pct">14.39%</div><div class="bar-track"><div class="bar-fill" style="--tw:14.39%;width:14.39%;background:linear-gradient(90deg,#00897B,#00D4AA)"></div></div></td>
           </tr>
           <tr>
             <td><div class="team-cell"><div class="team-dot" style="background:#7C3AED"></div><div class="team-name">Store Creation &amp; Maintenance</div></div></td>
             <td class="num-cell" data-label="Total Requests">3,038</td>
+            <td class="delta-cell" data-label="vs. May"><div class="delta-num">+1,052</div><div class="delta-sub">+52.97%</div></td>
             <td class="bar-cell"><div class="bar-pct">13.89%</div><div class="bar-track"><div class="bar-fill" style="--tw:13.89%;width:13.89%;background:linear-gradient(90deg,#7C3AED,#A78BFA)"></div></div></td>
           </tr>
           <tr>
             <td><div class="team-cell"><div class="team-dot" style="background:#B45309"></div><div class="team-name">AdOps</div></div></td>
             <td class="num-cell" data-label="Total Requests">1,769</td>
+            <td class="delta-cell" data-label="vs. May"><div class="delta-num">+1,758</div><div class="delta-sub">+15,981.82%</div></td>
             <td class="bar-cell"><div class="bar-pct">8.09%</div><div class="bar-track"><div class="bar-fill" style="--tw:8.09%;width:8.09%;background:linear-gradient(90deg,#B45309,#FFB347);min-width:6px"></div></div></td>
           </tr>
         </tbody>
@@ -490,6 +505,7 @@ body {
           <tr class="vol-foot">
             <td><span class="vol-foot-lbl">Grand Total</span></td>
             <td class="vol-foot-num" data-label="Total Requests">21,869</td>
+            <td class="vol-foot-num" data-label="vs. May" style="color:#059669">+4,912</td>
             <td class="vol-foot-num" data-label="Volume %" style="text-align:center">100%</td>
           </tr>
         </tfoot>
